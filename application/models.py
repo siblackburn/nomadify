@@ -1,12 +1,13 @@
 from . import db
 from datetime import datetime
-from sqlalchemy import Table, Integer, String, ForeignKey, Column
+from sqlalchemy import Table, Integer, String, ForeignKey, Column, ForeignKeyConstraint
 from sqlalchemy.ext.declarative import declarative_base
 
 
 group_membership_table = Table('group_membership', db.Model.metadata,
-    db.Column('group_id', db.Integer, db.ForeignKey('group_description.group_id')),
-    db.Column('user_id', db.Integer, db.ForeignKey('users.user_id')))
+    db.Column('group_id', db.Integer, db.ForeignKey('group_description.group_id'), primary_key=True),
+    db.Column('user_id', db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
+                               )
 
 
 class Users(db.Model):
@@ -29,7 +30,7 @@ class Users(db.Model):
 
 
     def retrieve_users(self):
-       return {
+        return {
            'user_id': self.user_id,
            'username': self.username,
            'email': self.email,
@@ -40,7 +41,6 @@ class Users(db.Model):
 
 
 class GroupDescription(db.Model):
-
     __tablename__ = 'group_description'
     group_id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     group_name = db.Column(db.String(50), nullable=True, unique=False)                  #if group has no name, return user name instead
@@ -51,7 +51,8 @@ class GroupDescription(db.Model):
         return GroupDescription(group_name=dict['group_name'])
 
     def return_groups(self):
-       return {
+        return {
+            'group_id': self.group_id,
            'group_name': self.group_name,
        }
 

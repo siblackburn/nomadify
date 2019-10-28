@@ -1,8 +1,11 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
+from .models import Users
 
 HelloApi = Blueprint('hello_api', __name__)
 
 
-@HelloApi.route('/<name>')
-def hello_user(name):
-    return render_template('hello.html', user=name)
+@HelloApi.route('/<user_id>')
+def hello_user(user_id):
+    user_id = request.args['user_id']
+    username = Users.query.filter(Users.user_id == user_id).first()
+    return render_template('hello.html', username=user_id)

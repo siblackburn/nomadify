@@ -1,7 +1,9 @@
 from flask import Blueprint, jsonify, request, render_template
+import json
 
 from . import db
-from .models import Users, Messages, GroupDescription
+from .models import Users, Messages, GroupDescription, group_membership_table
+from sqlalchemy import DateTime, desc
 
 
 ChatsApi = Blueprint('chats', __name__)
@@ -15,7 +17,6 @@ longer a query parameter
 def post_message(group_id):
     try:
         user_id = request.args['user_id']
-
         request_data = request.get_json()
         message_content = request_data.get("message_content", " ")
         new_message = Messages(group_id=group_id, message_content=message_content, user_id=user_id)
@@ -34,7 +35,6 @@ def post_message(group_id):
 #? is the query parameters. So in this case, we're accessing group chat 1, and we're querying them for user_id=2
 '''
 @ChatsApi.route('/<int:group_id>/messages', methods=['GET'])
-
 def get_messages(group_id):
     # user_id = request.args['user_id'] #returns the user_id, just so we can use the user_id in this function
     # user = Users.query.filter(Users.user_id == user_id).first()
@@ -44,22 +44,16 @@ def get_messages(group_id):
     #access the messages!!
     '''
     group_messages = Messages.query.filter(Messages.group_id == group_id).all()
-    return jsonify(group_messages.return_message()), 200
-
-
-
-
+    new_list = [Messages.return_message(message) for message in group_messages]
+    return jsonify(new_list), 200
 
 
 '''
 Method for getting a list of chats for a particular user
 /api/chats?user_id=<user_id>
 '''
-@ChatsApi.route('', methods=['GET'])
-
-def get_user_messages():
-    user_id = request.args['user_id']
-    user = Users.query.filter(Users.user_id == user_id).first()
-
-    group_chats = GroupDescription.query.filter(GroupDescription.users == user_id).all()
-    return jsonify(group_chats.return_message()), 200
+@ChatsApi.route('/<user_id>', methods=['GET'])
+def get_users_groups(user_id):
+    group_chats = GroupDescription.query.join(Users.groups).filter(Users.user_id == user_id).all()
+    list_of_chats = [GroupDescription.return_groups(g) for g in group_chats]
+    return jsonify(list_of_chats), 200
