@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request, render_template
 import json
 
 from . import db
-from .models import Users, Messages, GroupDescription, group_membership_table
+from .models import User, Messages, GroupDescription, group_membership_table
 from sqlalchemy import DateTime, desc
 
 
@@ -12,7 +12,7 @@ ChatsApi = Blueprint('chats', __name__)
 The route for create message is different to get message, because it's a specific user sending it. Therefore user is no
 longer a query parameter
 '''
-#/api/chats/<group_id>/messages?user_id=<user_id>&limit=10
+#/api/chats/<group_id>/messages?user_id=<user_id>
 @ChatsApi.route('/<group_id>/messages', methods=['POST'])
 def post_message(group_id):
     try:
@@ -54,6 +54,6 @@ Method for getting a list of chats for a particular user
 '''
 @ChatsApi.route('/<user_id>', methods=['GET'])
 def get_users_groups(user_id):
-    group_chats = GroupDescription.query.join(Users.groups).filter(Users.user_id == user_id).all()
+    group_chats = GroupDescription.query.join(User.groups).filter(User.user_id == user_id).all()
     list_of_chats = [GroupDescription.return_groups(g) for g in group_chats]
     return jsonify(list_of_chats), 200

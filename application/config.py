@@ -15,8 +15,8 @@ class Config(object):
     #SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://{user}:{pw}@{url}/{db}'.format(user='postgres',pw='mysecretpassword',url='localhost',db='postgres')
 
     # mysql
-    db_password = os.environ['DB_PASSWORD']
-    SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://siblackburn:{db_password}@localhost/nomadify'
+    # db_password = os.environ['DB_PASSWORD']
+    SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://siblackburn:pwdd@localhost/nomadify'
 
 
 class ProductionConfig(Config):
