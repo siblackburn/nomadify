@@ -16,7 +16,7 @@ class Config(object):
 
     # mysql
     # db_password = os.environ['DB_PASSWORD']
-    SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://siblackburn:pwdd@localhost/nomadify'
+    SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://siblackburn:sd@localhost/nomadify'
 
 
 class ProductionConfig(Config):
