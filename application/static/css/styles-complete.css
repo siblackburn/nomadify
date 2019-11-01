@@ -175,6 +175,11 @@ img.icon-img {
     background-color: #e9ebeb;
 }
 
+.convo.new {
+    background-color: #99ccff;
+}
+
+
 .convo-info {
     width: calc(100% - 100px);
     height: 100%;
@@ -187,25 +192,30 @@ img.icon-img {
 .convo-title {
     width: 100%;
     height: 50%;
+    font-size: 0.9em;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .convo-date {
-    font-size: small;
+    font-size: 0.7em;
     margin-right: 10px;
+    align-items: right;
     color: #bcb3b3;
 }
 
 .convo-last-mssg {
     width: 100%;
     height: 50%;
+    font-size: 0.5em;
 }
 
 p.mssg {
     margin: 0;
     color: #4e4e4e;
+    align-items: right;
+    display: flex;
 }
 
 
@@ -239,7 +249,7 @@ p.mssg {
     height: calc(100% - 60px);
     padding: 20px 40px;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
     overflow-y: auto;
@@ -333,4 +343,77 @@ p.mssg-time {
 
 #main-chat-new-mssg button svg {
     margin: auto;
+}
+
+
+
+
+/* css for popup window to create new group */
+
+/* Button used to open the contact form - fixed at the bottom of the page */
+.open-button {
+  background-color: #555;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.8;
+  position: fixed;
+  bottom: 23px;
+  right: 28px;
+  width: 280px;
+}
+
+/* The popup form - hidden by default */
+.form-popup {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+}
+
+/* Add styles to the form container */
+.form-container {
+  max-width: 300px;
+  padding: 10px;
+  background-color: white;
+}
+
+/* Full-width input fields */
+.form-container input[type=text], .form-container input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+}
+
+/* When the inputs get focus, do something */
+.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit/login button */
+.form-container .btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom:10px;
+  opacity: 0.8;
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+  background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+  opacity: 1;
 }

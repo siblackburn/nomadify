@@ -1,3 +1,10 @@
+let currentChatId = null;
+let currentUserId = null;
+const convo_info = document.querySelector('#convo-info');
+
+
+
+
 
 // get the element that was clicked, this information is given to us in the click event; retrieve data- attributes
 const convoClick = (event) => {
@@ -14,10 +21,13 @@ const convoClick = (event) => {
     // populate form chat id input
     const dataAttributes = clickedElement.dataset;
     const chat_id = dataAttributes.chat_id;
+    const user_id = dataAttributes.user_id;
     document.querySelector('#sndr-chat_id').value = chat_id;
+    currentChatId = chat_id
+    currentUserId = user_id
 
     // Retrieve the messages to populate main screen
-    retrieveMessages(clickedElement.dataset);
+    retrieveMessages(currentChatId, currentUserId);
 }
 
     // looks for all "convo" classes, and adds an "eventlistener"; then if there is a "click" it runs convoClick
@@ -25,11 +35,11 @@ for(let element of document.getElementsByClassName("convo")) {
     element.addEventListener('click', convoClick, false);
 }
 
-// window.setInterval(function() {
+
 
     // gets JSON, then translates to JS, then runs addMessage function (with JS)
-const retrieveMessages = (req_info) => {
-    const url = `/api/chats/${req_info.chat_id}/messages?user_id=${req_info.user_id}`
+const retrieveMessages = (chat_id, user_id) => {
+    const url = `/api/chats/${chat_id}/messages?user_id=${user_id}`
     fetch(url, {
         method: 'GET'
     })
@@ -39,24 +49,29 @@ const retrieveMessages = (req_info) => {
     })
 }
 
-// }, 500)
+
+
+
+
+
 
     // for each element in "message" run create messagewrapper
 const addMessages = (messages) => {
     let MainWrapper = document.querySelector('#main-chat-wrap');
     MainWrapper.innerHTML = '';
     
-    messages.sort(function compare(a, b) {
-        var dateA = new Date(a.date);
-        var dateB = new Date(b.date);
-        return dateA - dateB;
-      });
-    
-
     for(let message of messages) {
         createMessageWrappers(message)
     }
 }
+
+// auto refresh loads new messages if new messages come through
+setInterval(() => {
+    if(currentChatId !== null && currentUserId !== null) {
+    retrieveMessages(currentChatId, currentUserId)
+    }
+}, 1000);
+
 
 
 
@@ -76,7 +91,6 @@ const createMessageWrappers = (message) => {
         message_in_out.classList.add('message','in');
     }
 
-    // message_io.classList.add('message.type'); //<div class="message out"> //
 
 
     let mssg = document.createElement('p') //<p>
@@ -99,7 +113,9 @@ const createMessageWrappers = (message) => {
 
 
 // First - get new message from newMessage function, get chat_id and user_id from the html form
-const submitNewMessage = ()  => {
+const submitNewMessage = (event)  => {
+    event.preventDefault();
+
     const newMessage = document.querySelector('#new-message').value;
     const chat_id = document.querySelector('#sndr-chat_id').value;
     const user_id = document.querySelector('#sndr-name').value;
@@ -119,8 +135,56 @@ const submitNewMessage = ()  => {
     })
     .then(data => {
         createMessageWrappers(data)
-        document.querySelector('#new-message').value = '';
-        // document.querySelector(`div.convo[data-chat_id="${chat_id}"] p.mssg`).innerHTML = data.message_content
+        document.querySelector('#new-message').value = '' 
+        updateScroll()
+        document.querySelector(`div.convo[data-chat_id="${chat_id}"] p.mssg`).innerHTML = data.message_content
+        document.querySelector(`div.convo[data-chat_id="${chat_id}"] p.mssg`).innerHTML = data.timestamp
     })
 }
 // The then statement tells JS to execute each item in turn, rather than do asynchronus execution. This one returns JSON, then sets the send messages textbox to nothing, then posts the new message to the chat
+
+
+// Function to make sure the chat always displays latest message in main-chat unless user scrolls up
+function updateScroll(){
+    var scrolldiv = document.getElementById("main-chat-wrap");
+    scrolldiv.scrollTop = scrolldiv.scrollHeight;
+}
+setInterval(updateScroll,500);
+
+
+
+// New groups popup form
+function openForm() {
+    document.getElementById("myForm").style.display = "block";
+  }
+  
+  function closeForm() {
+    document.getElementById("myForm").style.display = "none";
+  }
+
+
+
+
+
+  const createGroup = (event)  => {
+    event.preventDefault();
+
+    const newGroup = document.querySelector('#group-name').value;
+    const user_ids = document.querySelector('#group-users').value;
+    let user_ids = user_ids
+    
+    console.log(newGroup)
+    console.log(user_ids)
+
+    const url = `/api/new_group/`;
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            'group_name': newGroup,
+            'user_ids': user_ids
+        })
+    })
+}
