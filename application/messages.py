@@ -13,19 +13,19 @@ The route for create message is different to get message, because it's a specifi
 longer a query parameter
 '''
 #/api/chats/<group_id>/messages?user_id=<user_id>
-@ChatsApi.route('/<group_id>/messages', methods=['POST'])
+@ChatsApi.route('/<int:group_id>/messages', methods=['POST'])
 def post_message(group_id):
     try:
         user_id = request.args['user_id']
         request_data = request.get_json()
-        message_content = request_data.get("message_content", " ")
+        message_content = request_data.get("message_content")
         new_message = Messages(group_id=group_id, message_content=message_content, user_id=user_id)
     except KeyError as e:
         return jsonify(f'Missing key: {e.args[0]}'), 400
 
     db.session.add(new_message)
     db.session.commit()
-    return jsonify(), 200
+    return jsonify(new_message.return_message()), 200
 
 
 # http://0.0.0.0:5000/api/chats/2/messages?user_id=9&
@@ -54,6 +54,10 @@ Method for getting a list of chats for a particular user
 '''
 @ChatsApi.route('/<user_id>', methods=['GET'])
 def get_users_groups(user_id):
+    user = User.query.filter(User.user_id == user_id).first()
+    groups = user.groups
+
     group_chats = GroupDescription.query.join(User.groups).filter(User.user_id == user_id).all()
     list_of_chats = [GroupDescription.return_groups(g) for g in group_chats]
+
     return jsonify(list_of_chats), 200

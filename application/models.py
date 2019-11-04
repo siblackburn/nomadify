@@ -4,8 +4,8 @@ from sqlalchemy import Table, Integer, String, ForeignKey, Column, ForeignKeyCon
 
 
 group_membership_table = Table('group_membership', db.Model.metadata,
-    db.Column('group_id', db.Integer, db.ForeignKey('group_description.group_id')),
-    db.Column('user_id', db.Integer, db.ForeignKey('users.user_id')))
+    db.Column('group_id', db.Integer, db.ForeignKey('group_description.group_id', ondelete='CASCADE')),
+    db.Column('user_id', db.Integer, db.ForeignKey('users.user_id', ondelete='CASCADE')))
 
 
 class User(db.Model):

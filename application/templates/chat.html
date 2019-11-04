@@ -27,7 +27,7 @@
                         </button>
                     </li>
                     <li>
-                        <button data-click="chat" class="svg-wrap">
+                        <button data-click="chat" class="svg-wrap", onclick="openForm()">
                             <svg id="header-chat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
                                 <path opacity=".55" fill="#263238"
                                     d="M19.005 3.175H4.674C3.642 3.175 3 3.789 3 4.821V21.02l3.544-3.514h12.461c1.033 0 2.064-1.06 2.064-2.093V4.821c-.001-1.032-1.032-1.646-2.064-1.646zm-4.989 9.869H7.041V11.1h6.975v1.944zm3-4H7.041V7.1h9.975v1.944z">
@@ -143,7 +143,7 @@
 
                 <div id="new-mssg-wrap" class="chat-bubble-wrap">
                     <div id="new-mssg-bubble" class="chat-bubble">
-                        <form id="new-message-form" name="new-message-form">
+                        <form id="new-message-form" name="new-message-form" onsubmit="submitNewMessage(event)">
                             <input type="text" name="message" id="new-message" placeholder="Type a message">
                             <input type="hidden" name="user_id" id="sndr-name" value="{{user.user_id}}">
                             <input type="hidden" name="chat_id" id="sndr-chat_id" value="">
@@ -160,6 +160,23 @@
             </div>
         </div>
     </div>
+
+    <div class="form-popup" id="myForm">
+        <form class="form-container">
+          <h1>Create group</h1>
+      
+          <label for="group_name"><b>Group Description</b></label>
+          <input type="text" placeholder="Enter group name" name="group_name" id="group-name" required>
+      
+          <label for="users"><b>user_id</b></label>
+          <input type="text" placeholder="Enter User ids" name="user_id" id="group-users" required>
+
+      
+          <button type="submit" class="btn"Create! onclick="createGroup(event)">submit</button>
+          <button type="submit" class="btn cancel" onclick="closeForm()">Close</button>
+        </form>
+      </div>
+
 
     <script src="{{ url_for('static', filename='js/script.js')}}"></script>
 </body>

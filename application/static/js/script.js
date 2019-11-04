@@ -170,8 +170,8 @@ function openForm() {
     event.preventDefault();
 
     const newGroup = document.querySelector('#group-name').value;
-    const user_ids = document.querySelector('#group-users').value;
-    let user_ids = user_ids
+    const user_ids = document.querySelector('#group-users').value.split(",").map(x => parseInt(x, 10));
+  
     
     console.log(newGroup)
     console.log(user_ids)
