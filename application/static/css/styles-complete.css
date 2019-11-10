@@ -367,7 +367,7 @@ p.mssg-time {
 /* The popup form - hidden by default */
 .form-popup {
   display: none;
-  position: fixed;
+  position: left;
   bottom: 0;
   right: 15px;
   border: 3px solid #f1f1f1;
